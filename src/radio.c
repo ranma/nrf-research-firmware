@@ -224,6 +224,18 @@ void handle_radio_request(uint8_t request, uint8_t * data)
     return;
   }
 
+  else if (request == READ_ROM)
+  {
+    __code uint8_t *src = (__code void *)((data[1] << 8) | data[0]);
+    uint8_t n;
+    FSR = data[2];
+    for (n = 0; n < 64; n++) {
+      in1buf[n] = src[n];
+    }
+    in1bc = 64;
+    return;
+  }
+
   // Enter ESB promiscuous mode
   else if(request == ENTER_PROMISCUOUS_MODE)
   {

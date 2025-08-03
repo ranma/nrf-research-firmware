@@ -49,6 +49,7 @@ __sfr __at (0xAC) REGXL;          // ref: nRF24LU1+ Product Spec, Section 19.3.6
 __sfr __at (0xAD) REGXC;          // ref: nRF24LU1+ Product Spec, Section 19.3.6, Table 129
 __sfr __at (0xA8) ien0;           // ref: nRF24LU1+ Product Spec, Section 22.4.1, Table 139
 __sfr __at (0xB8) ien1;           // ref: nRF24LU1+ Product Spec, Section 22.4.2, Table 140
+__sfr __at (0xF8) FSR;            // ref: nRF24LU1+ Product Spec, Section 22.4.2, Table 140
 
 // SFR bits
 __sbit __at (0x90) rfce;          // ref: nRF24LU1+ Product Spec, Section 6.5.1, Table 21
