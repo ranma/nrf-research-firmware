@@ -133,7 +133,7 @@ class unifying_dongle:
 
     # Request the firmware version
     response = self.send_command(0x21, 0x09, 0x0210, 0x0002, "\x10\xFF\x81\xF1\x01\x00\x00", ep=0x83)
-    if response[5] != 0x12:
+    if response[5] != 0x12 and response[5] != 0x25 and response[5] != 0x24:
       logging.info('Incompatible Logitech Unifying dongle (type {:02X}). Only Nordic Semiconductor based dongles are supported.'.format(response[5]))
       sys.exit(1)
 
