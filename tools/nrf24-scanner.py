@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 '''
   Copyright (C) 2016 Bastille Networks
 
@@ -24,15 +24,17 @@ from lib import common
 common.init_args('./nrf24-scanner.py')
 common.parser.add_argument('-p', '--prefix', type=str, help='Promiscuous mode address prefix', default='')
 common.parser.add_argument('-d', '--dwell', type=float, help='Dwell time per channel, in milliseconds', default='100')
+common.parser.add_argument('-r', '--rate', type=int, help='RX rate (0=250k, 1=1M, 2=2M)', default=2)
 common.parse_and_init()
 
 # Parse the prefix addresses
-prefix_address = common.args.prefix.replace(':', '').decode('hex')
+prefix_address = bytearray.fromhex(common.args.prefix.replace(':', ''))
 if len(prefix_address) > 5:
   raise Exception('Invalid prefix address: {0}'.format(args.address))
 
 # Put the radio in promiscuous mode
-common.radio.enter_promiscuous_mode(prefix_address)
+common.radio.enter_promiscuous_mode_generic(prefix_address, rate=common.args.rate)
+#common.radio.enter_promiscuous_mode(prefix_address)
 
 # Convert dwell time from milliseconds to seconds
 dwell_time = common.args.dwell / 1000
@@ -50,6 +52,7 @@ while True:
     channel_index = (channel_index + 1) % (len(common.channels))
     common.radio.set_channel(common.channels[channel_index])
     last_tune = time.time()
+    logging.info('Scanning channel {0}'.format(common.channels[channel_index]))
 
   # Receive payloads
   value = common.radio.receive_payload()
@@ -64,5 +67,9 @@ while True:
               len(payload),
               ':'.join('{:02X}'.format(b) for b in address),
               ':'.join('{:02X}'.format(b) for b in payload)))
+  else:
+    if (len(value) > 1):
+      logging.info('Received {0}'.format(
+                  ':'.join('{:02X}'.format(b) for b in value)))
 
 
